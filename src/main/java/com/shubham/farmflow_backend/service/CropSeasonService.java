@@ -11,7 +11,11 @@ public class CropSeasonService {
     private CropSeasonRepository repository;
 
     public CropSeason getCropSeasonById(Long id) {
-        return repository.findCropSeasonById(id);
+        CropSeason cropSeason = repository.findCropSeasonById(id);
+        if (cropSeason == null) {
+            throw new IllegalArgumentException("CropSeason with id " + id + " not found.");
+        }
+        return cropSeason;
     }
 
     public CropSeason addCropSeason(CropSeason cropSeason) {
@@ -22,14 +26,12 @@ public class CropSeasonService {
         return repository.findCropSeasonsByFarmId(farmId);
     }
 
-    public String deleteCropSeason(Long id) {
+    public void deleteCropSeason(Long id) {
         CropSeason cropSeason = repository.findCropSeasonById(id);
         if (cropSeason == null) {
-            return "CropSeason with id " + id + " not found.";
+            throw new IllegalArgumentException("CropSeason with id " + id + " not found.");
         }
-        String name = cropSeason.getCropName();
         repository.deleteById(id);
-        return "CropSeason with id " + name + " has been deleted.";
     }
 
     public CropSeason updateCropSeason(CropSeason cropSeason) {

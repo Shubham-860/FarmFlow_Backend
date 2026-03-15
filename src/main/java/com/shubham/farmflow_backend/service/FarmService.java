@@ -1,6 +1,7 @@
 package com.shubham.farmflow_backend.service;
 
 import com.shubham.farmflow_backend.entity.Farm;
+import com.shubham.farmflow_backend.entity.User;
 import com.shubham.farmflow_backend.repository.FarmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,9 @@ import java.util.List;
 public class FarmService {
     @Autowired
     FarmRepository repository;
+
+    @Autowired
+    UserService userService;
 
     public Farm addFarm(Farm farm) {
         return repository.save(farm);
@@ -24,18 +28,17 @@ public class FarmService {
         return farm;
     }
 
-    public List<Farm> getFarmsByUserId(Long userId) {
-        return repository.findFarmsByUserId(userId);
+    public List<Farm> getFarmsByUserId() {
+        User user = userService.getCurrentUser();
+        return repository.findFarmsByUserId(user.getId());
     }
 
-    public String deleteFarm(Long id) {
+    public void deleteFarm(Long id) {
         Farm farm = repository.findById(id).orElse(null);
         if (farm == null) {
-            return "Farm with id " + id + " not found.";
+            throw new IllegalArgumentException("Farm with id " + id + " not found.");
         }
-        String name = farm.getName();
         repository.deleteById(id);
-        return "Farm with id " + name + " has been deleted.";
     }
 
     public Farm updateFarm(Farm farm) {

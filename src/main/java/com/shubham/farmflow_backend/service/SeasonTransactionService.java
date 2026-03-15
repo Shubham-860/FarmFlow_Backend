@@ -12,7 +12,11 @@ public class SeasonTransactionService {
     private SeasonTransactionRepository repository;
 
     public SeasonTransaction getSeasonTransactionById(Long id) {
-        return repository.findSeasonTransactionById(id);
+        SeasonTransaction seasonTransaction = repository.findSeasonTransactionById(id);
+        if (seasonTransaction == null) {
+            throw new IllegalArgumentException("SeasonTransaction with id " + id + " not found.");
+        }
+        return seasonTransaction;
     }
 
     public SeasonTransaction addSeasonTransaction(SeasonTransaction seasonTransaction) {
@@ -23,14 +27,12 @@ public class SeasonTransactionService {
         return repository.findSeasonTransactionsByCropSeasonId(cropSeasonId);
     }
 
-    public String deleteSeasonTransaction(Long id) {
+    public void deleteSeasonTransaction(Long id) {
         SeasonTransaction seasonTransaction = repository.findSeasonTransactionById(id);
         if (seasonTransaction == null) {
             throw new IllegalArgumentException("SeasonTransaction with id " + id + " not found.");
         }
-        String name = seasonTransaction.getCropSeason().getCropName();
         repository.deleteById(id);
-        return "SeasonTransaction with id " + name + " has been deleted.";
     }
 
     public SeasonTransaction updateSeasonTransaction(SeasonTransaction seasonTransaction) {

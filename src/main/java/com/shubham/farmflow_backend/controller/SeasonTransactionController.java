@@ -33,12 +33,14 @@ public class SeasonTransactionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSeasonTransaction(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deleteSeasonTransaction(id));
+    public ResponseEntity<Void> deleteSeasonTransaction(@PathVariable Long id) {
+        service.deleteSeasonTransaction(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<SeasonTransaction> updateSeasonTransaction(@RequestBody SeasonTransaction seasonTransaction) {
+    @PutMapping("/{id}")
+    public ResponseEntity<SeasonTransaction> updateSeasonTransaction(@PathVariable Long id, @RequestBody SeasonTransaction seasonTransaction) {
+        seasonTransaction.setId(id);
         return ResponseEntity.ok(service.updateSeasonTransaction(seasonTransaction));
     }
 

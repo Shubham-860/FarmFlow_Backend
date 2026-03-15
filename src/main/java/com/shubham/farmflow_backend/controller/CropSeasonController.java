@@ -3,7 +3,6 @@ package com.shubham.farmflow_backend.controller;
 import com.shubham.farmflow_backend.entity.CropSeason;
 import com.shubham.farmflow_backend.service.CropSeasonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,15 +29,16 @@ public class CropSeasonController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCropSeason(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deleteCropSeason(id));
+    public ResponseEntity<Void> deleteCropSeason(@PathVariable Long id) {
+        service.deleteCropSeason(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<CropSeason> updateCropSeason(@RequestBody CropSeason cropSeason) {
+    @PutMapping("/{id}")
+    public ResponseEntity<CropSeason> updateCropSeason(@PathVariable Long id, @RequestBody CropSeason cropSeason) {
+        cropSeason.setId(id);
         return ResponseEntity.ok(service.updateCropSeason(cropSeason));
     }
-
 
 
 }

@@ -17,10 +17,16 @@ public class FarmController {
         return ResponseEntity.ok(service.getFarmById(id));
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<Iterable<Farm>> getFarmsByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(service.getFarmsByUserId(userId));
+    @GetMapping("/all")
+    public ResponseEntity<Iterable<Farm>> getAllUserFarms() {
+        return ResponseEntity.ok(service.getFarmsByUserId());
     }
+
+//    @GetMapping("/me")
+//    public ResponseEntity<Iterable<Farm>> getMyFarms() {
+//        User currentUser = userService.getCurrentUser();
+//        return ResponseEntity.ok(service.getFarmsByUserId(currentUser.getId()));
+//    }
 
     @PostMapping("/add")
     public ResponseEntity<Farm> addFarm(@RequestBody Farm farm) {
@@ -28,12 +34,14 @@ public class FarmController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteFarm(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deleteFarm(id));
+    public ResponseEntity<Void> deleteFarm(@PathVariable Long id) {
+        service.deleteFarm(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Farm> updateFarm(@RequestBody Farm farm) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Farm> updateFarm(@PathVariable Long id, @RequestBody Farm farm) {
+        farm.setId(id);
         return ResponseEntity.ok(service.updateFarm(farm));
     }
 
