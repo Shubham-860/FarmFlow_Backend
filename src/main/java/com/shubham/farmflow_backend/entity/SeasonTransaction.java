@@ -46,9 +46,6 @@ public class SeasonTransaction {
     @JoinColumn(name = "cropSeason_id", nullable = false)
     private CropSeason cropSeason;
 
-    @ManyToOne
-    @JoinColumn(name = "farm_id", nullable = false)
-    private Farm farm;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

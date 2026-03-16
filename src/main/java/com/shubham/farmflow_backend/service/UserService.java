@@ -31,6 +31,7 @@ public class UserService implements UserDetailsService {
         }
         return user;
     }
+
     public User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !(auth.getPrincipal() instanceof User user)) {
@@ -61,7 +62,6 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("User with email " + user.getEmail() + " already exists.");
         }
         userRepository.save(user);
-
     }
 
     public void deleteUser(Long id) {

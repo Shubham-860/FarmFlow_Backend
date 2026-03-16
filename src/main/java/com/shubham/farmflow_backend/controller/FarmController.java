@@ -1,5 +1,6 @@
 package com.shubham.farmflow_backend.controller;
 
+import com.shubham.farmflow_backend.dto.FarmDTO;
 import com.shubham.farmflow_backend.entity.Farm;
 import com.shubham.farmflow_backend.service.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,12 @@ public class FarmController {
     private FarmService service;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Farm> getFarmById(@PathVariable Long id) {
+    public ResponseEntity<FarmDTO> getFarmById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getFarmById(id));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<Farm>> getAllUserFarms() {
+    public ResponseEntity<Iterable<FarmDTO>> getAllUserFarms() {
         return ResponseEntity.ok(service.getFarmsByUserId());
     }
 
@@ -29,7 +30,7 @@ public class FarmController {
 //    }
 
     @PostMapping("/add")
-    public ResponseEntity<Farm> addFarm(@RequestBody Farm farm) {
+    public ResponseEntity<String> addFarm(@RequestBody Farm farm) {
         return ResponseEntity.ok(service.addFarm(farm));
     }
 
@@ -40,7 +41,7 @@ public class FarmController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Farm> updateFarm(@PathVariable Long id, @RequestBody Farm farm) {
+    public ResponseEntity<FarmDTO> updateFarm(@PathVariable Long id, @RequestBody Farm farm) {
         farm.setId(id);
         return ResponseEntity.ok(service.updateFarm(farm));
     }

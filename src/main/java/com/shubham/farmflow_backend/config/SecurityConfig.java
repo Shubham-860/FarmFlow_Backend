@@ -20,17 +20,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
-        http.csrf(AbstractHttpConfigurer::disable)
-//                .cors(cors -> {
-//                })
-                .authorizeHttpRequests(
-                        auth -> auth
-                                .requestMatchers("/auth/**", "/user/add").permitAll()
-                                .anyRequest().authenticated()
-                ).httpBasic(Customizer.withDefaults())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
 
+        http
+                .cors(Customizer.withDefaults())   // enable CORS in security
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**", "/user/add").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
     @Bean
@@ -44,23 +46,5 @@ public class SecurityConfig {
             AuthenticationConfiguration config) {
         return config.getAuthenticationManager();
     }
-//    @Bean
-//    public AuthenticationManager authorizationManager() {
-//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-//        provider.setPasswordEncoder(passwordEncoder());
-//        provider.setUserDetailsService(userDetailsService());
-//        return new ProviderManager(provider);
-//    }
 
 }
-// http
-//         .csrf(AbstractHttpConfigurer::disable)
-//                .cors(cors -> {
-//        })
-//        .authorizeHttpRequests(auth -> auth
-//        .requestMatchers("/user/**").permitAll()
-//                        .requestMatchers("/pets/**").permitAll()
-//                        .requestMatchers("/cart/**").permitAll()
-//                        .anyRequest()
-//                        .authenticated()
-//                );

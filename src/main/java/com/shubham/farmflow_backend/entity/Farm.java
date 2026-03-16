@@ -28,10 +28,8 @@ public class Farm {
     private User user;
 
     @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL)
-    private List<CropSeason> cropSeason;
+    private List<CropSeason> cropSeasons;
 
-    @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL)
-    private List<SeasonTransaction> seasonTransaction;
 
     @PrePersist
     protected void onCreate() {
