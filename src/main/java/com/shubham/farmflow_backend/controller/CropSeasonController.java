@@ -1,5 +1,7 @@
 package com.shubham.farmflow_backend.controller;
 
+import com.shubham.farmflow_backend.dto.CropSeasonDTO;
+import com.shubham.farmflow_backend.dto.SetActiveDTO;
 import com.shubham.farmflow_backend.entity.CropSeason;
 import com.shubham.farmflow_backend.service.CropSeasonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,31 +16,34 @@ public class CropSeasonController {
     private CropSeasonService service;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CropSeason> getCropSeasonById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getCropSeasonById(id));
+    public ResponseEntity<CropSeasonDTO> getCropSeasonById(@PathVariable Long id) {
+        return service.getCropSeasonById(id);
     }
 
-    @GetMapping("/farms/{farmId}")
-    public ResponseEntity<Iterable<CropSeason>> getCropSeasonsByFarmId(@PathVariable Long farmId) {
-        return ResponseEntity.ok(service.getCropSeasonsByFarmId(farmId));
-    }
+//    @GetMapping("/farms/{farmId}")
+//    public ResponseEntity<Iterable<CropSeason>> getCropSeasonsByFarmId(@PathVariable Long farmId) {
+//        return ResponseEntity.ok(service.getCropSeasonsByFarmId(farmId));
+//    }
 
     @PostMapping("/add")
-    public ResponseEntity<CropSeason> addCropSeason(@RequestBody CropSeason cropSeason) {
-        return ResponseEntity.ok(service.addCropSeason(cropSeason));
+    public ResponseEntity<String> addCropSeason(@RequestBody CropSeason cropSeason) {
+        return service.addCropSeason(cropSeason);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCropSeason(@PathVariable Long id) {
-        service.deleteCropSeason(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteCropSeason(@PathVariable Long id) {
+        return service.deleteCropSeason(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CropSeason> updateCropSeason(@PathVariable Long id, @RequestBody CropSeason cropSeason) {
+    public ResponseEntity<CropSeasonDTO> updateCropSeason(@PathVariable Long id, @RequestBody CropSeason cropSeason) {
         cropSeason.setId(id);
-        return ResponseEntity.ok(service.updateCropSeason(cropSeason));
+        return service.updateCropSeason(cropSeason);
     }
 
+    @PostMapping("/activate")
+    public ResponseEntity<String> setActiveCropSeason(@RequestBody SetActiveDTO setActiveDTO) {
+        return service.setActiveByCropSeasonId(setActiveDTO.getFarmId(), setActiveDTO.getCropSeasonId());
+    }
 
 }

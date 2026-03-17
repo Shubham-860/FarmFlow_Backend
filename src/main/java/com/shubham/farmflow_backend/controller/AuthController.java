@@ -1,6 +1,6 @@
 package com.shubham.farmflow_backend.controller;
 
-import com.shubham.farmflow_backend.dto.UserDTO;
+import com.shubham.farmflow_backend.dto.UserInfoDTO;
 import com.shubham.farmflow_backend.dto.UserRequestDTO;
 import com.shubham.farmflow_backend.entity.User;
 import com.shubham.farmflow_backend.repository.UserRepository;
@@ -41,11 +41,11 @@ public class AuthController {
         }
 
         User currentUser = userRepository.findByEmail(jwtService.extractUsername(token));
-        UserDTO userDTO = new UserDTO(currentUser);  // ← UserDTO here
+        UserInfoDTO userInfoDTO = new UserInfoDTO(currentUser);  // ← UserDTO here
 
         return ResponseEntity.ok(Map.of(
                 "token", token,
-                "user", userDTO   // ← clean user object, no password/authorities
+                "user", userInfoDTO   // ← clean user object, no password/authorities
         ));
     }
 

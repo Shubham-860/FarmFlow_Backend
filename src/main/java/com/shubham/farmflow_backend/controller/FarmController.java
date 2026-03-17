@@ -15,7 +15,7 @@ public class FarmController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FarmDTO> getFarmById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getFarmById(id));
+        return service.getFarmById(id);
     }
 
     @GetMapping("/all")
@@ -31,19 +31,18 @@ public class FarmController {
 
     @PostMapping("/add")
     public ResponseEntity<String> addFarm(@RequestBody Farm farm) {
-        return ResponseEntity.ok(service.addFarm(farm));
+        return service.addFarm(farm);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFarm(@PathVariable Long id) {
-        service.deleteFarm(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteFarm(@PathVariable Long id) {
+        return service.deleteFarm(id);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<FarmDTO> updateFarm(@PathVariable Long id, @RequestBody Farm farm) {
         farm.setId(id);
-        return ResponseEntity.ok(service.updateFarm(farm));
+        return service.updateFarm(farm);
     }
 
 }

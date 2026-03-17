@@ -4,7 +4,6 @@ import com.shubham.farmflow_backend.entity.CropSeason;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,8 +12,8 @@ public class CropSeasonDTO {
     private Long id;
     private String cropName;
     private String unit;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private boolean isActive;
     private String notes;
     private LocalDateTime createdAt;

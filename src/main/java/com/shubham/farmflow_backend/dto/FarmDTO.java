@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class FarmDTO {
     private Long id;
     private String name;
-    private int areaAcre;
+    private float areaAcre;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long userId;

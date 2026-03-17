@@ -16,7 +16,7 @@ public class Farm {
     @Column(unique = true, nullable = false)
     private String name;
 
-    private int areaAcre;
+    private float areaAcre;
 
     @Column(updatable = false)
     private LocalDateTime createdAt;

@@ -5,6 +5,8 @@ import com.shubham.farmflow_backend.entity.Farm;
 import com.shubham.farmflow_backend.entity.User;
 import com.shubham.farmflow_backend.repository.FarmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,23 +20,22 @@ public class FarmService {
     @Autowired
     UserService userService;
 
-    public String addFarm(Farm farm) {
-        if (repository.findFarmById(farm.getUser().getId()) != null) {
-            throw new IllegalArgumentException("User with id " + farm.getUser().getId() + " already has a farm.");
-        }
-
+    public ResponseEntity<String> addFarm(Farm farm) {
         User user = userService.getCurrentUser();
+        if (repository.findFarmByName(farm.getName()) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("You already have a farm with this name");
+        }
         farm.setUser(user);
         repository.save(farm);
-        return "Farm added successfully";
+        return ResponseEntity.ok("Farm added successfully");
     }
 
-    public FarmDTO getFarmById(Long id) {
+    public ResponseEntity<FarmDTO> getFarmById(Long id) {
         Farm farm = repository.findFarmById(id);
         if (farm == null) {
-            throw new IllegalArgumentException("Farm with id " + id + " not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return new FarmDTO(farm);
+        return ResponseEntity.ok(new FarmDTO(farm));
     }
 
     public List<FarmDTO> getFarmsByUserId() {
@@ -45,20 +46,25 @@ public class FarmService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteFarm(Long id) {
+    public ResponseEntity<String> deleteFarm(Long id) {
         Farm farm = repository.findById(id).orElse(null);
         if (farm == null) {
-            throw new IllegalArgumentException("Farm with id " + id + " not found.");
+            ResponseEntity.status(404).body("Farm not found");
+//            throw new IllegalArgumentException("Farm with id " + id + " not found.");
         }
         repository.deleteById(id);
+        return ResponseEntity.ok("Farm deleted successfully");
     }
 
-    public FarmDTO updateFarm(Farm farm) {
-        Farm existingFarm = repository.findById(farm.getId()).orElse(null);
+    public ResponseEntity<FarmDTO> updateFarm(Farm farm) {
+        Farm existingFarm = repository.findFarmById(farm.getId());
         if (existingFarm == null) {
-            throw new IllegalArgumentException("Farm with id " + farm.getId() + " not found.");
+            ResponseEntity.status(404).body("Farm not found");
+//            throw new IllegalArgumentException("Farm with id " + farm.getId() + " not found.");
         }
+        assert existingFarm != null;
+        farm.setUser(existingFarm.getUser());
         Farm saved = repository.save(farm);
-        return new FarmDTO(saved);
+        return ResponseEntity.ok(new FarmDTO(saved));
     }
 }

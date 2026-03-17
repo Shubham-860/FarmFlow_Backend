@@ -1,8 +1,11 @@
 package com.shubham.farmflow_backend.service;
 
+import com.shubham.farmflow_backend.dto.CropSeasonDTO;
 import com.shubham.farmflow_backend.entity.CropSeason;
 import com.shubham.farmflow_backend.repository.CropSeasonRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,35 +13,64 @@ public class CropSeasonService {
     @Autowired
     private CropSeasonRepository repository;
 
-    public CropSeason getCropSeasonById(Long id) {
+
+    public ResponseEntity<String> addCropSeason(CropSeason cropSeason) {
+        try {
+            repository.save(cropSeason);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Something went wrong");
+        }
+        return ResponseEntity.ok("CropSeason added successfully");
+    }
+
+//    public Iterable<CropSeason> getCropSeasonsByFarmId(Long farmId) {
+//        return repository.findCropSeasonsByFarmId(farmId);
+//    }
+
+    public ResponseEntity<CropSeasonDTO> getCropSeasonById(Long id) {
         CropSeason cropSeason = repository.findCropSeasonById(id);
         if (cropSeason == null) {
+            ResponseEntity.notFound().build();
             throw new IllegalArgumentException("CropSeason with id " + id + " not found.");
         }
-        return cropSeason;
+        return ResponseEntity.ok(new CropSeasonDTO(cropSeason));
     }
 
-    public CropSeason addCropSeason(CropSeason cropSeason) {
-        return repository.save(cropSeason);
-    }
-
-    public Iterable<CropSeason> getCropSeasonsByFarmId(Long farmId) {
-        return repository.findCropSeasonsByFarmId(farmId);
-    }
-
-    public void deleteCropSeason(Long id) {
+    public ResponseEntity<String> deleteCropSeason(Long id) {
         CropSeason cropSeason = repository.findCropSeasonById(id);
         if (cropSeason == null) {
-            throw new IllegalArgumentException("CropSeason with id " + id + " not found.");
+            ResponseEntity.status(404).body("CropSeason not found");
         }
         repository.deleteById(id);
+        return ResponseEntity.ok("CropSeason deleted successfully");
     }
 
-    public CropSeason updateCropSeason(CropSeason cropSeason) {
+    public ResponseEntity<CropSeasonDTO> updateCropSeason(CropSeason cropSeason) {
         CropSeason existingCropSeason = repository.findCropSeasonById(cropSeason.getId());
         if (existingCropSeason == null) {
-            throw new IllegalArgumentException("CropSeason with id " + cropSeason.getId() + " not found.");
+            ResponseEntity.status(404).body("CropSeason not found");
         }
-        return repository.save(cropSeason);
+        CropSeason saved = repository.save(cropSeason);
+        return ResponseEntity.ok(new CropSeasonDTO(saved));
+    }
+
+    @Transactional
+    public ResponseEntity<String> setActiveByCropSeasonId(Long farmId, Long cropSeasonId) {
+        CropSeason cropSeason = repository.findCropSeasonById(cropSeasonId);
+        if (cropSeason == null) {
+            return ResponseEntity.status(404).body("CropSeason not found");
+        }
+        if (!cropSeason.getFarm().getId().equals(farmId)) {
+            return ResponseEntity.status(403).body("CropSeason does not belong to the specified farm");
+        }
+        try {
+            repository.deactivateAllByFarmId(farmId);
+            repository.activateById(cropSeasonId);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Something went wrong");
+        }
+
+        return ResponseEntity.ok("CropSeason set as active successfully");
+
     }
 }
