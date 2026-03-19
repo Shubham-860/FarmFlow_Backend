@@ -30,6 +30,8 @@ public class Farm {
     @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL)
     private List<CropSeason> cropSeasons;
 
+    @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL)
+    private List<SeasonTransaction> seasonTransactions;
 
     @PrePersist
     protected void onCreate() {

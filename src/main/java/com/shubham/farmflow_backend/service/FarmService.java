@@ -1,6 +1,7 @@
 package com.shubham.farmflow_backend.service;
 
 import com.shubham.farmflow_backend.dto.FarmDTO;
+import com.shubham.farmflow_backend.dto.FarmWithoutTransectionDTO;
 import com.shubham.farmflow_backend.entity.Farm;
 import com.shubham.farmflow_backend.entity.User;
 import com.shubham.farmflow_backend.repository.FarmRepository;
@@ -38,7 +39,15 @@ public class FarmService {
         return ResponseEntity.ok(new FarmDTO(farm));
     }
 
-    public List<FarmDTO> getFarmsByUserId() {
+    public List<FarmWithoutTransectionDTO> getFarmsByUserId() {
+        User user = userService.getCurrentUser();
+        return repository.findFarmsByUserId(user.getId())
+                .stream()
+                .map(FarmWithoutTransectionDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<FarmDTO> getFarmsWithTransectionsByUserId() {
         User user = userService.getCurrentUser();
         return repository.findFarmsByUserId(user.getId())
                 .stream()

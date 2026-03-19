@@ -1,8 +1,10 @@
 package com.shubham.farmflow_backend.service;
 
 import com.shubham.farmflow_backend.entity.SeasonTransaction;
+import com.shubham.farmflow_backend.entity.User;
 import com.shubham.farmflow_backend.repository.SeasonTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,6 +12,8 @@ public class SeasonTransactionService {
 
     @Autowired
     private SeasonTransactionRepository repository;
+    @Autowired
+    private UserService userService;
 
     public SeasonTransaction getSeasonTransactionById(Long id) {
         SeasonTransaction seasonTransaction = repository.findSeasonTransactionById(id);
@@ -19,8 +23,15 @@ public class SeasonTransactionService {
         return seasonTransaction;
     }
 
-    public SeasonTransaction addSeasonTransaction(SeasonTransaction seasonTransaction) {
-        return repository.save(seasonTransaction);
+    public ResponseEntity<String> addSeasonTransaction(SeasonTransaction seasonTransaction) {
+        try {
+            User user = userService.getCurrentUser();
+            seasonTransaction.setUser(user);
+            repository.save(seasonTransaction);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Something went wrong");
+        }
+        return ResponseEntity.ok("SeasonTransaction added successfully");
     }
 
     public Iterable<SeasonTransaction> getSeasonTransactionsByCropSeasonId(Long cropSeasonId) {

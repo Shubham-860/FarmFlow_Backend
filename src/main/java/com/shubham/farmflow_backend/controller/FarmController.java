@@ -1,6 +1,7 @@
 package com.shubham.farmflow_backend.controller;
 
 import com.shubham.farmflow_backend.dto.FarmDTO;
+import com.shubham.farmflow_backend.dto.FarmWithoutTransectionDTO;
 import com.shubham.farmflow_backend.entity.Farm;
 import com.shubham.farmflow_backend.service.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,13 @@ public class FarmController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<FarmDTO>> getAllUserFarms() {
+    public ResponseEntity<Iterable<FarmWithoutTransectionDTO>> getAllUserFarms() {
         return ResponseEntity.ok(service.getFarmsByUserId());
+    }
+
+    @GetMapping("/allinfo")
+    public ResponseEntity<Iterable<FarmDTO>> getAllUserFarmsData() {
+        return ResponseEntity.ok(service.getFarmsWithTransectionsByUserId());
     }
 
 //    @GetMapping("/me")

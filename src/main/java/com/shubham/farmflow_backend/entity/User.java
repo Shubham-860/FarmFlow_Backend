@@ -33,6 +33,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Farm> farms;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<SeasonTransaction> seasonTransaction;
 

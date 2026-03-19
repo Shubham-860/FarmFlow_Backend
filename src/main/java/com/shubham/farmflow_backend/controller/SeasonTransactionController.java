@@ -28,8 +28,8 @@ public class SeasonTransactionController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<SeasonTransaction> addSeasonTransaction(@RequestBody SeasonTransaction seasonTransaction) {
-        return ResponseEntity.ok(service.addSeasonTransaction(seasonTransaction));
+    public ResponseEntity<String> addSeasonTransaction(@RequestBody SeasonTransaction seasonTransaction) {
+        return service.addSeasonTransaction(seasonTransaction);
     }
 
     @DeleteMapping("/{id}")

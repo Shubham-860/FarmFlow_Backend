@@ -4,11 +4,9 @@ import com.shubham.farmflow_backend.entity.CropSeason;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
-public class CropSeasonDTO {
+public class CropSeasonInfoOnlyDTO {
     private Long id;
     private String cropName;
     private String unit;
@@ -21,9 +19,8 @@ public class CropSeasonDTO {
     private LocalDateTime updatedAt;
     private Long farmId;
     private String farmName;
-    private List<SeasonTransactionDTO> seasonTransactions;
 
-    public CropSeasonDTO(CropSeason cropSeason) {
+    public CropSeasonInfoOnlyDTO(CropSeason cropSeason) {
         this.id = cropSeason.getId();
         this.cropName = cropSeason.getCropName();
         this.unit = cropSeason.getUnit();
@@ -36,9 +33,5 @@ public class CropSeasonDTO {
         this.updatedAt = cropSeason.getUpdatedAt();
         this.farmId = cropSeason.getFarm().getId();
         this.farmName = cropSeason.getFarm().getName();
-        this.seasonTransactions = cropSeason.getSeasonTransaction()
-                .stream()
-                .map(SeasonTransactionDTO::new)
-                .collect(Collectors.toList());
     }
 }

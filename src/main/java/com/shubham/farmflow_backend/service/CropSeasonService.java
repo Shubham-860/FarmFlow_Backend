@@ -54,6 +54,11 @@ public class CropSeasonService {
         return ResponseEntity.ok(new CropSeasonDTO(saved));
     }
 
+//    public ResponseEntity<List<CropSeasonInfoOnlyDTO>> getActiveCropSeasonByFarmId(Long farmId) {
+//        List cropSessions = repository.findCropSeasonsByFarmIdAndIsActiveTrue(farmId);
+//
+//    }
+
     @Transactional
     public ResponseEntity<String> setActiveByCropSeasonId(Long farmId, Long cropSeasonId) {
         CropSeason cropSeason = repository.findCropSeasonById(cropSeasonId);
@@ -71,6 +76,22 @@ public class CropSeasonService {
         }
 
         return ResponseEntity.ok("CropSeason set as active successfully");
+
+    }
+
+    @Transactional
+    public ResponseEntity<String> setCompleteByCropSeasonId(Long cropSeasonId, boolean isComplete) {
+        CropSeason cropSeason = repository.findCropSeasonById(cropSeasonId);
+        if (cropSeason == null) {
+            return ResponseEntity.status(404).body("CropSeason not found");
+        }
+        try {
+            repository.updateIsCompleteById(isComplete, cropSeasonId);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Something went wrong");
+        }
+
+        return ResponseEntity.ok("CropSeason set as complete successfully");
 
     }
 }

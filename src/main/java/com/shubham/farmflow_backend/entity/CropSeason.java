@@ -21,6 +21,7 @@ public class CropSeason {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private boolean isActive;
+    private boolean isComplete;
 
     @Column(columnDefinition = "TEXT")
     private String notes;

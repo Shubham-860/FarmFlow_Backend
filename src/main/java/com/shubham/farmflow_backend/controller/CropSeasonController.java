@@ -1,6 +1,7 @@
 package com.shubham.farmflow_backend.controller;
 
 import com.shubham.farmflow_backend.dto.CropSeasonDTO;
+import com.shubham.farmflow_backend.dto.IdBoolRequestDTO;
 import com.shubham.farmflow_backend.dto.SetActiveDTO;
 import com.shubham.farmflow_backend.entity.CropSeason;
 import com.shubham.farmflow_backend.service.CropSeasonService;
@@ -46,4 +47,8 @@ public class CropSeasonController {
         return service.setActiveByCropSeasonId(setActiveDTO.getFarmId(), setActiveDTO.getCropSeasonId());
     }
 
+    @PostMapping("/setcomplete")
+    public ResponseEntity<String> setCompleteByCropSeasonId(@RequestBody IdBoolRequestDTO idBool) {
+        return service.setCompleteByCropSeasonId(idBool.getId(), idBool.getBool());
+    }
 }

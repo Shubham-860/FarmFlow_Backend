@@ -24,6 +24,8 @@ public class SeasonTransactionDTO {
     private Long cropSeasonId;
     private String cropName;
     private Long userId;
+    private Long farmId;
+    private String farmName;
 
     public SeasonTransactionDTO(SeasonTransaction st) {
         this.id = st.getId();
@@ -42,5 +44,7 @@ public class SeasonTransactionDTO {
         this.cropSeasonId = st.getCropSeason().getId();
         this.cropName = st.getCropSeason().getCropName();
         this.userId = st.getUser().getId();
+        this.farmId = st.getFarm().getId();
+        this.farmName = st.getFarm().getName();
     }
 }
