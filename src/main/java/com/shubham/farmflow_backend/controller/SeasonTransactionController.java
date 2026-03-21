@@ -40,8 +40,8 @@ public class SeasonTransactionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<SeasonTransaction> updateSeasonTransaction(@PathVariable Long id, @RequestBody SeasonTransaction seasonTransaction) {
-        seasonTransaction.setId(id);
-        return ResponseEntity.ok(service.updateSeasonTransaction(seasonTransaction));
+//        seasonTransaction.setId(id);
+        return service.updateSeasonTransaction(seasonTransaction);
     }
 
 }

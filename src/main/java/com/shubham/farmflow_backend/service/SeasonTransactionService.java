@@ -46,11 +46,25 @@ public class SeasonTransactionService {
         repository.deleteById(id);
     }
 
-    public SeasonTransaction updateSeasonTransaction(SeasonTransaction seasonTransaction) {
-        SeasonTransaction existingSeasonTransaction = repository.findSeasonTransactionById(seasonTransaction.getId());
-        if (existingSeasonTransaction == null) {
-            throw new IllegalArgumentException("SeasonTransaction with id " + seasonTransaction.getId() + " not found.");
+    public ResponseEntity<SeasonTransaction> updateSeasonTransaction(SeasonTransaction st) {
+        SeasonTransaction user = repository.findSeasonTransactionById(st.getId());
+        if (user == null) {
+            ResponseEntity.status(404).body("SeasonTransaction not found");
         }
-        return repository.save(seasonTransaction);
+        try {
+            assert user != null;
+            user.setCategory(st.getCategory());
+            user.setSourceOrBuyer(st.getSourceOrBuyer());
+            user.setQuantity(st.getQuantity());
+            user.setUnit(st.getUnit());
+            user.setPricePerUnit(st.getPricePerUnit());
+            user.setAmount(st.getAmount());
+            user.setPaymentStatus(st.getPaymentStatus());
+            user.setDescription(st.getDescription());
+            user.setTransactionDate(st.getTransactionDate());
+        } catch (Exception e) {
+            ResponseEntity.badRequest().body("Something went wrong");
+        }
+        return ResponseEntity.ok(repository.save(user));
     }
 }

@@ -6,13 +6,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface CropSeasonRepository extends JpaRepository<CropSeason, Long> {
     CropSeason findCropSeasonById(Long id);
 
 //    List<CropSeason> findCropSeasonsByFarmId(Long farmId);
-
 //    List<CropSeason> findCropSeasonsByFarmIdAndIsActiveTrue(Long farmId);
 //    List<CropSeason> findCropSeasonsByUserIdAndIsActiveTrue(Long userId);
 

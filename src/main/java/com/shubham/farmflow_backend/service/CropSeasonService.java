@@ -1,6 +1,7 @@
 package com.shubham.farmflow_backend.service;
 
 import com.shubham.farmflow_backend.dto.CropSeasonDTO;
+import com.shubham.farmflow_backend.dto.CropSeasonInfoOnlyDTO;
 import com.shubham.farmflow_backend.entity.CropSeason;
 import com.shubham.farmflow_backend.repository.CropSeasonRepository;
 import jakarta.transaction.Transactional;
@@ -34,6 +35,15 @@ public class CropSeasonService {
             throw new IllegalArgumentException("CropSeason with id " + id + " not found.");
         }
         return ResponseEntity.ok(new CropSeasonDTO(cropSeason));
+    }
+
+    public ResponseEntity<CropSeasonInfoOnlyDTO> getCropSeasonOnlyById(Long id) {
+        CropSeason cropSeason = repository.findCropSeasonById(id);
+        if (cropSeason == null) {
+            ResponseEntity.notFound().build();
+            throw new IllegalArgumentException("CropSeason with id " + id + " not found.");
+        }
+        return ResponseEntity.ok(new CropSeasonInfoOnlyDTO(cropSeason));
     }
 
     public ResponseEntity<String> deleteCropSeason(Long id) {

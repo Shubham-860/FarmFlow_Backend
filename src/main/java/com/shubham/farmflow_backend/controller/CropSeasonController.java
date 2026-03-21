@@ -1,6 +1,7 @@
 package com.shubham.farmflow_backend.controller;
 
 import com.shubham.farmflow_backend.dto.CropSeasonDTO;
+import com.shubham.farmflow_backend.dto.CropSeasonInfoOnlyDTO;
 import com.shubham.farmflow_backend.dto.IdBoolRequestDTO;
 import com.shubham.farmflow_backend.dto.SetActiveDTO;
 import com.shubham.farmflow_backend.entity.CropSeason;
@@ -21,6 +22,10 @@ public class CropSeasonController {
         return service.getCropSeasonById(id);
     }
 
+    @GetMapping("/only/{id}")
+    public ResponseEntity<CropSeasonInfoOnlyDTO> getCropSeasonOnlyById(@PathVariable Long id) {
+        return service.getCropSeasonOnlyById(id);
+    }
 //    @GetMapping("/farms/{farmId}")
 //    public ResponseEntity<Iterable<CropSeason>> getCropSeasonsByFarmId(@PathVariable Long farmId) {
 //        return ResponseEntity.ok(service.getCropSeasonsByFarmId(farmId));
