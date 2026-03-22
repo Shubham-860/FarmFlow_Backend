@@ -39,12 +39,12 @@ public class FarmService {
         return ResponseEntity.ok(new FarmDTO(farm));
     }
 
-    public List<FarmWithoutTransectionDTO> getFarmsByUserId() {
+    public ResponseEntity<List<FarmWithoutTransectionDTO>> getFarmsByUserId() {
         User user = userService.getCurrentUser();
-        return repository.findFarmsByUserId(user.getId())
+        return ResponseEntity.ok((repository.findFarmsByUserId(user.getId())
                 .stream()
                 .map(FarmWithoutTransectionDTO::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())));
     }
 
     public List<FarmDTO> getFarmsWithTransectionsByUserId() {

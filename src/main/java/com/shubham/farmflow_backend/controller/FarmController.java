@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/farm")
 public class FarmController {
@@ -20,12 +22,12 @@ public class FarmController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<FarmWithoutTransectionDTO>> getAllUserFarms() {
-        return ResponseEntity.ok(service.getFarmsByUserId());
+    public ResponseEntity<List<FarmWithoutTransectionDTO>> getAllUserFarms() {
+        return service.getFarmsByUserId();
     }
 
     @GetMapping("/allinfo")
-    public ResponseEntity<Iterable<FarmDTO>> getAllUserFarmsData() {
+    public ResponseEntity<List<FarmDTO>> getAllUserFarmsData() {
         return ResponseEntity.ok(service.getFarmsWithTransectionsByUserId());
     }
 

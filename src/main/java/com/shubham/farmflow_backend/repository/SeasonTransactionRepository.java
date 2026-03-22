@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -24,5 +25,50 @@ public interface SeasonTransactionRepository extends JpaRepository<SeasonTransac
                  where t.user.id = :userid
             """)
     Map<String, Object> getBalanceByUserId(@Param("userid") Long userid);
+
     List<SeasonTransaction> findTop10ByUserIdOrderByCreatedAtDesc(Long userId);
+
+    @Query("""
+    SELECT
+        SUM(CASE WHEN t.type = 'INCOME' AND t.paymentStatus = 'RECEIVED' THEN t.amount ELSE 0 END) as totalIncome,
+        SUM(CASE WHEN t.type = 'EXPENSE' THEN t.amount ELSE 0 END) as totalExpense,
+        SUM(CASE WHEN t.type = 'INCOME' AND t.paymentStatus = 'RECEIVED' THEN t.amount ELSE 0 END) -
+        SUM(CASE WHEN t.type = 'EXPENSE' THEN t.amount ELSE 0 END) as netProfit,
+        SUM(CASE WHEN t.type = 'INCOME' THEN t.amount ELSE 0 END) -
+        SUM(CASE WHEN t.type = 'EXPENSE' THEN t.amount ELSE 0 END) as anticipatedProfit,
+        SUM(CASE WHEN t.type = 'INCOME' AND t.paymentStatus = 'PENDING' THEN t.amount ELSE 0 END) as pendingIncome
+    FROM SeasonTransaction t
+    WHERE t.user.id = :userId
+        AND (:farmId IS NULL OR t.farm.id = :farmId)
+        AND (:cropSeasonId IS NULL OR t.cropSeason.id = :cropSeasonId)
+        AND (:startDate IS NULL OR t.transactionDate >= :startDate)
+        AND (:endDate IS NULL OR t.transactionDate <= :endDate)
+""")
+    Map<String, Object> getFilteredSummary(
+            @Param("userId") Long userId,
+            @Param("farmId") Long farmId,
+            @Param("cropSeasonId") Long cropSeasonId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
+
+    @Query("""
+                SELECT t FROM SeasonTransaction t
+                WHERE t.user.id = :userId
+                    AND (:farmId IS NULL OR t.farm.id = :farmId)
+                    AND (:cropSeasonId IS NULL OR t.cropSeason.id = :cropSeasonId)
+                    AND (:startDate IS NULL OR t.transactionDate >= :startDate)
+                    AND (:endDate IS NULL OR t.transactionDate <= :endDate)
+                ORDER BY t.transactionDate DESC
+            """)
+    List<SeasonTransaction> getFilteredTransactions(
+            @Param("userId") Long userId,
+            @Param("farmId") Long farmId,
+            @Param("cropSeasonId") Long cropSeasonId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
+
 }
