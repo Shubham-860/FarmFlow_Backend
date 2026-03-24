@@ -88,4 +88,48 @@ public interface SeasonTransactionRepository extends JpaRepository<SeasonTransac
     List<SeasonTransaction> getRecentActivity();
 
     long count();
+
+    @Query("""
+                SELECT
+                    SUM(CASE WHEN t.type = 'INCOME' THEN t.amount ELSE 0 END) as totalIncome,
+                    SUM(CASE WHEN t.type = 'INCOME' THEN t.quantity ELSE 0 END) as totalQuantity,
+                    COUNT(DISTINCT t.farm.id) as farmCount,
+                    SUM(CASE WHEN t.type = 'EXPENSE' THEN t.amount ELSE 0 END) as totalExpense
+                FROM SeasonTransaction t
+                WHERE t.cropSeason.cropName = :cropName
+            """)
+    Map<String, Object> getCropSummary(@Param("cropName") String cropName);
+
+
+
+    @Query("""
+                SELECT t.farm.name as farmName,
+                       SUM(CASE WHEN t.type = 'INCOME' THEN t.amount ELSE 0 END) as totalIncome
+                FROM SeasonTransaction t
+                WHERE t.cropSeason.cropName = :cropName
+                GROUP BY t.farm.id, t.farm.name
+                ORDER BY totalIncome DESC
+                LIMIT 5
+            """)
+    List<Map<String, Object>> getTopFarmsByCrop(@Param("cropName") String cropName);
+
+
+    @Query("""
+                SELECT t.cropSeason.cropName as cropName
+                FROM SeasonTransaction t
+                GROUP BY t.cropSeason.cropName
+                ORDER BY t.cropSeason.cropName ASC
+            """)
+    List<String> getAllDistinctCropNames();
+
+    @Query("""
+    SELECT t.farm.name as farmName,
+           SUM(CASE WHEN t.type = 'INCOME' THEN t.quantity ELSE 0 END) as totalQuantity
+    FROM SeasonTransaction t
+    WHERE UPPER(t.cropSeason.cropName) = UPPER(:cropName)
+    GROUP BY t.farm.id, t.farm.name
+    ORDER BY totalQuantity DESC
+""")
+    List<Map<String, Object>> getProductionByFarm(@Param("cropName") String cropName);
+
 }

@@ -36,4 +36,15 @@ public class AdminController {
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         return adminService.deleteUser(id);
     }
+
+    @GetMapping("/cropnames")
+    public ResponseEntity<?> getCropNames() {
+        return adminService.getCropNames();
+    }
+
+    @GetMapping("/cropanalytics")
+    public ResponseEntity<?> getCropAnalytics(@RequestParam String cropName) {
+        return adminService.getCropAnalytics(cropName);
+    }
+
 }

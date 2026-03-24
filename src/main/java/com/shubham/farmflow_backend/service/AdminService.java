@@ -99,4 +99,32 @@ public class AdminService {
                     .body(Map.of("error", "Failed to delete user: " + e.getMessage()));
         }
     }
+
+    public ResponseEntity<?> getCropNames() {
+        try {
+            List<String> cropNames = stRepository.getAllDistinctCropNames();
+            return ResponseEntity.ok(cropNames);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to fetch crop names: " + e.getMessage()));
+        }
+    }
+
+    public ResponseEntity<?> getCropAnalytics(String cropName) {
+        try {
+            cropName = cropName.trim().toUpperCase(); // normalize
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("summary", stRepository.getCropSummary(cropName));
+            result.put("topFarms", stRepository.getTopFarmsByCrop(cropName));
+            result.put("productionByFarm", stRepository.getProductionByFarm(cropName));
+
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to fetch crop analytics: " + e.getMessage()));
+        }
+    }
+
+
 }

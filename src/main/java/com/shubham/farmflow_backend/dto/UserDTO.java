@@ -12,6 +12,7 @@ public class UserDTO {
     private Long id;
     private String name;
     private String email;
+    private String role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<FarmDTO> farms;
@@ -20,6 +21,7 @@ public class UserDTO {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
+        this.role= user.getRole().name();
         this.createdAt = user.getCreatedAt();
         this.updatedAt = user.getUpdatedAt();
         this.farms = user.getFarms()
