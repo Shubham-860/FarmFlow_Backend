@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -66,9 +67,15 @@ public class JwtService {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public String generateToken(UserDetails userDetails) {
 
+    public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("role", userDetails.getAuthorities()
+                .stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse("ROLE_USER"));
+
         return Jwts.builder()
                 .claims()
                 .add(claims)
@@ -78,6 +85,21 @@ public class JwtService {
                 .and()
                 .signWith(getKey())
                 .compact();
-
     }
+//    public String generateToken(UserDetails userDetails) {
+//
+//        Map<String, Object> claims = new HashMap<>();
+//        return Jwts.builder()
+//                .claims()
+//                .add(claims)
+//                .subject(userDetails.getUsername())
+//                .issuedAt(new Date(System.currentTimeMillis()))
+//                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+//                .and()
+//                .signWith(getKey())
+//                .compact();
+//
+//    }
+
+
 }

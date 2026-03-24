@@ -1,17 +1,17 @@
 package com.shubham.farmflow_backend.service;
 
+import com.shubham.farmflow_backend.dto.UserInfoDTO;
 import com.shubham.farmflow_backend.entity.User;
 import com.shubham.farmflow_backend.repository.UserRepository;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -40,20 +40,14 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public Map<String, Object> getCurrentUserMap() {
+    public ResponseEntity<UserInfoDTO> getCurrentUserMap() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getName() == null) {
             throw new IllegalArgumentException("No authenticated user found.");
         }
+        User user = userRepository.findByEmail(authentication.getName());
+        return ResponseEntity.ok(new UserInfoDTO(user));
 
-        String email = authentication.getName();
-        User user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
-        return Map.of(
-                "id", user.getId(),
-                "name", user.getName(),
-                "email", user.getEmail()
-        );
     }
 
     public void addUser(User user) {

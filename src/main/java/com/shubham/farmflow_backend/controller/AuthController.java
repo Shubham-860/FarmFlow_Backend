@@ -2,6 +2,7 @@ package com.shubham.farmflow_backend.controller;
 
 import com.shubham.farmflow_backend.dto.UserInfoDTO;
 import com.shubham.farmflow_backend.dto.UserRequestDTO;
+import com.shubham.farmflow_backend.entity.Enums;
 import com.shubham.farmflow_backend.entity.User;
 import com.shubham.farmflow_backend.repository.UserRepository;
 import com.shubham.farmflow_backend.service.AuthService;
@@ -56,7 +57,17 @@ public class AuthController {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
-
+        user.setRole(Enums.Role.ADMIN);
+        return ResponseEntity.ok(this.authService.register(user).getBody());
+    }
+    @PostMapping("/registerUser")
+    public ResponseEntity<Map<String, Object>> registerUser(@RequestBody UserRequestDTO request) {
+        // Map UserRequestDTO → User entity
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRole(Enums.Role.USER);
         return ResponseEntity.ok(this.authService.register(user).getBody());
     }
 }

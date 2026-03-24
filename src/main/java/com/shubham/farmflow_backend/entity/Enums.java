@@ -4,7 +4,9 @@ public class Enums {
     public enum TransactionType {
         INCOME, EXPENSE
     }
-
+    public enum Role {
+        USER, ADMIN
+    }
     public enum PaymentStatus {
         PENDING, RECEIVED
     }
