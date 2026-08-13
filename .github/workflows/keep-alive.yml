@@ -1,0 +1,21 @@
+name: Keep Render Awake
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # runs every 10 minutes, all day (we'll filter time inside)
+  workflow_dispatch:  # lets you manually trigger for testing
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check IST time window and ping
+        run: |
+          IST_HOUR=$(TZ='Asia/Kolkata' date +%H)
+          if [ "$IST_HOUR" -ge 8 ] && [ "$IST_HOUR" -lt 20 ]; then
+            SLEEP=$((RANDOM % 240))  # random 0-240 sec extra delay for jitter
+            sleep $SLEEP
+            curl -s https://farmflow-backend-ir2w.onrender.com/actuator/health
+          else
+            echo "Outside 8am-8pm IST window, skipping"
+          fi
